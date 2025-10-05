@@ -1,5 +1,4 @@
 # Bazel artifacts
-**/bazel-*
 /bazel-*
 
 # Bzlmod lock file (auto-generated, should not be committed)
