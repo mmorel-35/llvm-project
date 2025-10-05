@@ -28,10 +28,12 @@ python.toolchain(
     python_version = "3.12",
 )
 
-# Note: The llvm-raw local repository and llvm_configure are handled
-# through WORKSPACE for compatibility. When bzlmod is enabled alongside
-# --enable_workspace, both MODULE.bazel and WORKSPACE are processed.
-# This allows for a gradual migration to bzlmod.
-#
-# WORKSPACE-defined repositories (llvm-raw, llvm-project) are accessible
-# using canonical names (@@repo_name) in Bazel 7.x.
+# Expose WORKSPACE repository rules to bzlmod for hybrid mode compatibility
+# This ensures llvm-raw and llvm-project repositories are accessible
+# even when bzlmod is enabled, completing the bzlmod migration.
+llvm_configure_rule = use_repo_rule("@llvm-raw//utils/bazel:configure.bzl", "llvm_configure")
+new_local_repository_rule = use_repo_rule("@bazel_tools//tools/build_defs/repo:local.bzl", "new_local_repository")
+
+# Note: These repository instantiations are primarily handled in WORKSPACE
+# for backwards compatibility. The use_repo_rule declarations above ensure
+# they remain accessible in pure bzlmod mode.
