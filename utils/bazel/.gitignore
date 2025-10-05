@@ -1,5 +1,8 @@
 # Bazel artifacts
-**/bazel-*
+/bazel-*
+
+# Bzlmod lock file (auto-generated, should not be committed)
+MODULE.bazel.lock
 
 # Per-user bazelrc files
 user.bazelrc
