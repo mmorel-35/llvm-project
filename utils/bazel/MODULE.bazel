@@ -28,12 +28,15 @@ python.toolchain(
     python_version = "3.12",
 )
 
-# Expose WORKSPACE repository rules to bzlmod for hybrid mode compatibility
-# This ensures llvm-raw and llvm-project repositories are accessible
-# even when bzlmod is enabled, completing the bzlmod migration.
-llvm_configure_rule = use_repo_rule("@llvm-raw//utils/bazel:configure.bzl", "llvm_configure")
-new_local_repository_rule = use_repo_rule("@bazel_tools//tools/build_defs/repo:local.bzl", "new_local_repository")
-
-# Note: These repository instantiations are primarily handled in WORKSPACE
-# for backwards compatibility. The use_repo_rule declarations above ensure
-# they remain accessible in pure bzlmod mode.
+# IMPORTANT: LLVM Bazel build requires hybrid bzlmod + WORKSPACE mode
+# The llvm-raw and llvm-project repositories are defined in WORKSPACE because:
+# 1. The module name is "llvm-project", preventing creation of a repository with the same name
+# 2. The llvm_configure repository rule creates an overlay of BUILD files on the LLVM source
+# 3. This approach maintains compatibility with existing downstream consumers
+#
+# To build LLVM, you MUST use both --enable_bzlmod and --enable_workspace flags.
+# These flags are set by default in .bazelrc. Using --noenable_workspace will cause
+# build failures with errors like "Repository '@@llvm-project' is not defined".
+#
+# WORKSPACE-defined repositories (llvm-raw, llvm-project) are accessible
+# using canonical names (@@repo_name) in Bazel 7.x hybrid mode.

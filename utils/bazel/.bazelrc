@@ -9,6 +9,9 @@
 
 # Enable bzlmod support for Bazel 7.x
 # https://github.com/llvm/llvm-project/issues/55924
+# IMPORTANT: Both flags are required. The LLVM Bazel build uses a hybrid approach
+# where MODULE.bazel defines external dependencies and WORKSPACE creates the
+# llvm-project repository overlay. Using --noenable_workspace will cause build failures.
 common --enable_bzlmod --enable_workspace
 
 # TODO: Remove lit test reliance on this
