@@ -26,14 +26,7 @@ python.toolchain(
     python_version = "3.12",
 )
 
-# Local repository for LLVM source
-llvm_raw = use_repo_rule("@bazel_tools//tools/build_defs/repo:local.bzl", "new_local_repository")
-llvm_raw(
-    name = "llvm-raw",
-    build_file_content = "# empty",
-    path = "../../",
-)
-
-# Configure LLVM project (this loads the configure.bzl)
-# Note: This is a repository rule that needs to be loaded from WORKSPACE or via non_module_dependencies
-# For now, this will be handled through WORKSPACE compatibility layer
+# Note: The llvm-raw local repository and llvm_configure are still handled
+# through WORKSPACE for compatibility. When bzlmod is enabled alongside
+# --enable_workspace, both MODULE.bazel and WORKSPACE are processed.
+# This allows for a gradual migration to bzlmod.
